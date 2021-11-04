@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xww.db.mapper.SystemTemplateMapper2">
+    <resultMap id="BaseResultMap2" type="edu.xww.db.model.SystemTemplate" extends="edu.xww.db.mapper.SystemTemplateMapper.BaseResultMap">
+    </resultMap>
+    <select id="selectDistinctTypeList" resultMap="BaseResultMap2">
+        SELECT DISTINCT `template`.`template_type` as `template_template_type`
+         FROM `system_template` `template`
+          WHERE `template`.`del_time` = 0;
+    </select>
+</mapper>

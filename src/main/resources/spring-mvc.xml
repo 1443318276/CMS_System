@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 打开注解驱动 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--指定需要由Spring自主加载的类所在包 定义注解驱动主动扫描的包 -->
+    <context:component-scan base-package="edu.xww.spring" />
+
+    <!--登录验证拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/master/login.do"/>
+            <mvc:exclude-mapping path="/master/loginDeal.do"/>
+            <mvc:exclude-mapping path="/master/lockScreen.do"/>
+            <mvc:exclude-mapping path="/master/unlock.do"/>
+            <bean class="edu.xww.spring.interceptor.MasterLoginInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/master/index.do"/>
+            <mvc:exclude-mapping path="/master/login.do"/>
+            <mvc:exclude-mapping path="/master/loginDeal.do"/>
+            <mvc:exclude-mapping path="/master/lockScreen.do"/>
+            <mvc:exclude-mapping path="/master/unlock.do"/>
+            <bean class="edu.xww.spring.interceptor.UserRuleInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 创建视图解析器-->
+    <!-- 解析Freemarker文件-->
+    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="suffix" value=".ftl"/>
+        <property name="order" value="0"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="allowRequestOverride" value="false"/>
+        <property name="allowSessionOverride" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSpringMacroHelpers" value="false"/>
+        <property name="cache" value="false"/>
+    </bean>
+
+    <bean id="freeMarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="${system.freemarker.loaderPath}"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">0</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="time_format">HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">0.##</prop>
+                <prop key="boolean_format">true,false</prop>
+                <prop key="url_escaping_charset">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 解析jsp文件-->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="1"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView"/>
+    </bean>
+
+    <!-- 加载配置文件-->
+    <context:property-placeholder location="classpath:project.properties" file-encoding="UTF-8"/>
+
+    <!-- dbcp -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="initialSize" value="0"/>
+        <property name="maxActive" value="5"/>
+        <property name="maxIdle" value="10"/>
+        <property name="minIdle" value="0"/>
+        <property name="maxWait" value="6000"/>
+    </bean>
+
+    <!-- c3p0 -->
+<!--    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+<!--        <property name="driverClass" value="${jdbc.driver}"/>-->
+<!--        <property name="jdbcUrl" value="${jdbc.url}"/>-->
+<!--        <property name="user" value="${jdbc.username}"/>-->
+<!--        <property name="password" value="${jdbc.password}"/>-->
+<!--        <property name="initialPoolSize" value="1"/>-->
+<!--        <property name="maxPoolSize" value="5"/>-->
+<!--        <property name="maxConnectionAge" value="6000"/>-->
+<!--    </bean>-->
+
+    <!-- Spring绑定MyBatis的使用-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:db/mapper/*.xml"/>
+    </bean>
+
+    <!-- Mapper接口所在目录 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="edu.xww.db.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 添加事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 开启注解事务的使用 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 文件上传相关配置-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="${system.upload.defaultEncoding}"/>
+        <property name="maxUploadSize" value="${system.upload.maxUploadSize}"/>
+        <property name="maxUploadSizePerFile" value="${system.upload.maxUploadSizePerFile}"/>
+        <property name="maxInMemorySize" value="${system.upload.maxInMemorySize}"/>
+        <property name="resolveLazily" value="${system.upload.resolveLazily}"/>
+    </bean>
+
+    <!-- 初始化自定义的类 -->
+    <bean id="peanutApplication" class="edu.xww.spring.Application" init-method="_init"/>
+
+</beans>

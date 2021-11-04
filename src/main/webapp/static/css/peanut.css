@@ -1,0 +1,80 @@
+.navbar-light .navbar-nav .peanut-link:focus, .navbar-light .navbar-nav .peanut-link:hover {
+    color: rgba(0, 0, 0, .7);
+}
+
+.navbar-light .navbar-nav .peanut-link {
+    color: rgba(0, 0, 0, .5);
+}
+
+.navbar-expand .navbar-nav .peanut-link {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.main-header .peanut-link {
+    height: 2.5rem;
+    position: relative;
+}
+
+.nav-link:focus, .peanut-link:hover {
+    text-decoration: none;
+}
+
+.peanut-link {
+    display: block;
+    padding: .5rem 1rem;
+}
+
+/* font-awesome-picker*/
+.font-awesome-picker {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, .1);
+    width: 400px;
+    max-width: 100%;
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 1rem;
+    border-radius: 15px;
+    right: 8px;
+    margin-top: -438px;
+    z-index: 1050;
+}
+
+/* 修改滚动条样式*/
+.font-awesome-picker::-webkit-scrollbar {
+    width: 2px;
+}
+
+.font-awesome-picker::-webkit-scrollbar-track {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .15);
+}
+
+.font-awesome-picker::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, .3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .25);
+}
+
+.awesome-header > .awesome-title {
+    font-size: 1.2rem;
+}
+
+.font-awesome-picker > .awesome-list {
+    list-style: none;
+    scroll-padding-inline-start: 0;
+    display: block;
+    width: 100%;
+}
+
+.font-awesome-picker > .awesome-list > li {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, .2);
+    margin-bottom: 5px;
+}

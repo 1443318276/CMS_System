@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 通过加载配置文件 来实现数据库资源的统一管理-->
+    <properties resource="./project.properties"/>
+    <!-- mysql-connector-java.jar的物理路径-->
+    <classPathEntry location="${jdbc.classPath}"/>
+    <context id="MySqlContext" targetRuntime="MyBatis3DynamicSql">
+        <!-- 设置基础属性-->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value=""/>
+        <property name="endingDelimiter" value=""/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 添加插件-->
+        <plugin type="mbg.LombokPlugin">
+
+        </plugin>
+        <!-- 维护的数据库链接信息-->
+     <jdbcConnection driverClass="${jdbc.driver}" connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+     </jdbcConnection>
+        <!--数据表对应的java模型所在的包-->
+        <javaModelGenerator targetPackage="edu.xww.db.model" targetProject="src\main\java">
+            <property name="rootClass" value="edu.xww.db.model.BaseModel"/>
+        </javaModelGenerator>
+        <!-- 指定的查询接口存放目录-->
+        <javaClientGenerator targetPackage="edu.xww.db.mapper" targetProject="src\main\java">
+            <property name="rootInterface" value="edu.xww.db.mapper.BaseMapper"/>
+        </javaClientGenerator>
+        <!-- 具体待生成的目标表名称-->
+        <table tableName="user_rule" alias="rule">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="user_router" alias="router">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="user_router_rule" alias="r_rule">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="user_master" alias="master">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="user_master_rule" alias="m_rule">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+        <table tableName="view_router_rule" alias="view_rr">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

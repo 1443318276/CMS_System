@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xww.db.mapper.ContentTypeMapper2">
+  <resultMap id="BaseResultMap2" type="edu.xww.db.model.ContentTypeWithParent" extends="edu.xww.db.mapper.ContentTypeMapper.BaseResultMap">
+   <association fetchType="eager" property="parentType" column="type_pid" select="findByPrimaryKeyWithParent"></association>
+  </resultMap>
+  <resultMap id="BaseResultMap3" type="edu.xww.db.model.ContentTypeWithParent" extends="edu.xww.db.mapper.ContentTypeMapper.BaseResultMap">
+    <collection property="childList" column="id" fetchType="eager" select="selectTypeListWithParentId"></collection>
+  </resultMap>
+  <select id="findByPrimaryKeyWithParent" parameterType="java.lang.Integer" resultMap="BaseResultMap2">
+    select
+    <include refid="edu.xww.db.mapper.ContentTypeMapper.Base_Column_List" />
+    from content_type type
+    where type.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectTypeListWithChild" parameterType="java.lang.Integer" resultMap="BaseResultMap3">
+    select
+    <include refid="edu.xww.db.mapper.ContentTypeMapper.Base_Column_List" />
+    from content_type type
+    where type.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectTypeListWithParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap3">
+    select
+    <include refid="edu.xww.db.mapper.ContentTypeMapper.Base_Column_List" />
+    from content_type type
+    where type.pid = #{id,jdbcType=INTEGER}
+  </select>
+
+</mapper>
